@@ -135,5 +135,5 @@ dmypy.json
 data/
 
 #saves
-.model
-.h5
+*.model
+*.h5
