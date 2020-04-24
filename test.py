@@ -56,13 +56,34 @@ model = keras.models.load_model("first_save.model")
 # print(CATEGORIES[int(prediction.values(max(prediction[0][0])))])
 # print(CATEGORIES[int(prediction[0][0])])
 
-files = []
-# r=root, d=directories, f = files
-for r, d, f in os.walk(validation_data_dir):
-    print(r)
-    for file in f:
-        if '.jpg' in file:
-            files.append(os.path.join(r, file))
+# files = {}
+# # r=root, d=directories, f = files
+# for r, d, f in os.walk(validation_data_dir):
+#     # print(r)
+#     for file in f:
+#         if '.jpg' in file:
+#             # print("jpg found")
+#             if 'Angry' in file:
+#                 files[os.path.join(r, file)] = 'Angry'
+#             elif 'Fear' in file:
+#                 files[os.path.join(r, file)] = 'Fear'
+#             elif 'Happy' in file:
+#                 files[os.path.join(r, file)] = 'Happy'
+#             elif 'Neutral' in file:
+#                 files[os.path.join(r, file)] = 'Neutral'
+#             elif 'Sad' in file :
+#                 files[os.path.join(r, file)]= 'Sad'
+#             elif 'Suprise' in file:
+#                 files[os.path.join(r, file)] = 'Suprise'
+#
+#             # files.append(os.path.join(r, file))
+# print (files)
+# for f in files:
+#     print(f)
 
-for f in files:
-    print(f)
+# probabilities = model.predict_generator(validation_generator, 10)
+# print(probabilities)
+# print(len(probabilities))
+
+loss, acc = model.evaluate_generator(validation_generator, verbose=0)
+print("loss: "+ str(loss) + " acc " + str(acc))
