@@ -85,5 +85,5 @@ model = keras.models.load_model("first_save.model")
 # print(probabilities)
 # print(len(probabilities))
 
-loss, acc = model.evaluate_generator(validation_generator, verbose=0)
+loss, acc = model.evaluate_generator(validation_generator)
 print("loss: "+ str(loss) + " acc " + str(acc))
