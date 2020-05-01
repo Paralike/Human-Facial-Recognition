@@ -51,7 +51,8 @@ validation_generator = validation_datagen.flow_from_directory(
     shuffle=True)
 
 model = Sequential()
-
+# Block #1: first CONV => RELU => CONV => RELU => POOL
+# layer set
 model.add(Conv2D(32, (3, 3), padding = 'same', kernel_initializer="he_normal",
                  input_shape = (img_rows, img_cols, 1)))
 model.add(Activation('elu'))
@@ -86,7 +87,7 @@ model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.2))
 
-# Block #4: third CONV => RELU => CONV => RELU => POOL
+# Block #4: fourth CONV => RELU => CONV => RELU => POOL
 # layer set
 model.add(Conv2D(256, (3, 3), padding="same", kernel_initializer="he_normal"))
 model.add(Activation('elu'))
@@ -116,39 +117,39 @@ model.add(Activation("softmax"))
 
 print(model.summary())
 
-checkpoint = ModelCheckpoint("emotion_little_vgg_3.h5",
-                             monitor="val_loss",
-                             mode="min",
-                             save_best_only = True,
-                             verbose=1)
-
-earlystop = EarlyStopping(monitor = 'val_loss',
-                          min_delta = 0,
-                          patience = 4,
-                          verbose = 1,
-                          restore_best_weights = True)
-
-reduce_lr = ReduceLROnPlateau(monitor = 'val_loss', factor = 0.2, patience = 3, verbose = 1, min_delta = 0.0001)
-
-# we put our call backs into a callback list
-callbacks = [earlystop, checkpoint, reduce_lr]
-
-# We use a very small learning rate
-model.compile(loss = 'categorical_crossentropy',
-              optimizer = Adam(lr=0.001),
-              metrics = ['accuracy'])
-
-nb_train_samples = 29045
-nb_validation_samples = 3534
-epochs = 10
-
-history = model.fit_generator(
-    train_generator,
-    steps_per_epoch = nb_train_samples // batch_size,
-    epochs = epochs,
-    callbacks = callbacks,
-    validation_data = validation_generator,
-    validation_steps = nb_validation_samples // batch_size)
-
-model.save('first_save.model')
+# checkpoint = ModelCheckpoint("emotion_little_vgg_3.h5",
+#                              monitor="val_loss",
+#                              mode="min",
+#                              save_best_only = True,
+#                              verbose=1)
+#
+# earlystop = EarlyStopping(monitor = 'val_loss',
+#                           min_delta = 0,
+#                           patience = 4,
+#                           verbose = 1,
+#                           restore_best_weights = True)
+#
+# reduce_lr = ReduceLROnPlateau(monitor = 'val_loss', factor = 0.2, patience = 3, verbose = 1, min_delta = 0.0001)
+#
+# # we put our call backs into a callback list
+# callbacks = [earlystop, checkpoint, reduce_lr]
+#
+# # We use a very small learning rate
+# model.compile(loss = 'categorical_crossentropy',
+#               optimizer = Adam(lr=0.001),
+#               metrics = ['accuracy'])
+#
+# nb_train_samples = 29045
+# nb_validation_samples = 3534
+# epochs = 10
+#
+# history = model.fit_generator(
+#     train_generator,
+#     steps_per_epoch = nb_train_samples // batch_size,
+#     epochs = epochs,
+#     callbacks = callbacks,
+#     validation_data = validation_generator,
+#     validation_steps = nb_validation_samples // batch_size)
+#
+# model.save('first_save.model')
 

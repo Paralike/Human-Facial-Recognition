@@ -16,12 +16,14 @@ from keras.layers.core import Activation, Flatten, Dropout, Dense
 from keras.preprocessing.image import img_to_array
 import cv2
 import numpy as np
+from sklearn.metrics import classification_report, confusion_matrix
 
 CATEGORIES = ["Angry", "Fear","Happy","Neutral", "Sad", "Suprise"]
 
 num_classes = 6
 img_rows, img_cols = 48, 48
 batch_size = 32
+nb_validation_samples = 3534
 
 train_data_dir = './data/train2'
 validation_data_dir = './data/validation'
@@ -43,8 +45,10 @@ def prepare(filepath):
     new_array = cv2.resize(img_array, (IMG_SIZE, IMG_SIZE))
     return new_array.reshape(-1, IMG_SIZE, IMG_SIZE, 1)
 
+def relu6(x):
+    return keras.activations.relu(x, max_value=6)
 
-model = keras.models.load_model("first_save.model")
+model = keras.models.load_model("MobileNet_save2.model",custom_objects={'relu6': relu6})
 
 # img = cv2.imread('../data/validation/Angry/0.jpg',0) # reads image 'opencv-logo.png' as grayscale
 # plt.imshow(img, cmap='gray')
@@ -87,3 +91,10 @@ model = keras.models.load_model("first_save.model")
 
 loss, acc = model.evaluate_generator(validation_generator)
 print("loss: "+ str(loss) + " acc " + str(acc))
+
+Y_pred = model.predict_generator(validation_generator, nb_validation_samples // batch_size+1)
+y_pred = np.argmax(Y_pred, axis=1)
+print('Confusion Matrix')
+print(confusion_matrix(validation_generator.classes, y_pred))
+print('Classification Report')
+print(classification_report(validation_generator.classes, y_pred, target_names=CATEGORIES))

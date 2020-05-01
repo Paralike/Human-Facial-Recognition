@@ -148,45 +148,45 @@ model.add(Activation('relu'))
 model.add(BatchNormalization())
 model.add(Dropout(0.5))
 
-# Block #7: softmax classifier
+# Block #9: softmax classifier
 model.add(Dense(num_classes))
 model.add(Activation("softmax"))
 
 print(model.summary())
 
-checkpoint = ModelCheckpoint("emotion_VGG_16.h5",
-                             monitor="val_loss",
-                             mode="min",
-                             save_best_only = True,
-                             verbose=1)
-
-earlystop = EarlyStopping(monitor = 'val_loss',
-                          min_delta = 0,
-                          patience = 4,
-                          verbose = 1,
-                          restore_best_weights = True)
-
-reduce_lr = ReduceLROnPlateau(monitor = 'val_loss', factor = 0.2, patience = 3, verbose = 1, min_delta = 0.0001)
-
-# we put our call backs into a callback list
-callbacks = [earlystop, checkpoint, reduce_lr]
-
-# We use a very small learning rate
-model.compile(loss = 'categorical_crossentropy',
-              optimizer = Adam(lr=0.001),
-              metrics = ['accuracy'])
-
-nb_train_samples = 29045
-nb_validation_samples = 3534
-epochs = 10
-
-history = model.fit_generator(
-    train_generator,
-    steps_per_epoch = nb_train_samples // batch_size,
-    epochs = epochs,
-    callbacks = callbacks,
-    validation_data = validation_generator,
-    validation_steps = nb_validation_samples // batch_size)
-
-model.save('VGG16_save.model')
+# checkpoint = ModelCheckpoint("emotion_VGG_16.h5",
+#                              monitor="val_loss",
+#                              mode="min",
+#                              save_best_only = True,
+#                              verbose=1)
+#
+# earlystop = EarlyStopping(monitor = 'val_loss',
+#                           min_delta = 0,
+#                           patience = 4,
+#                           verbose = 1,
+#                           restore_best_weights = True)
+#
+# reduce_lr = ReduceLROnPlateau(monitor = 'val_loss', factor = 0.2, patience = 3, verbose = 1, min_delta = 0.0001)
+#
+# # we put our call backs into a callback list
+# callbacks = [earlystop, checkpoint, reduce_lr]
+#
+# # We use a very small learning rate
+# model.compile(loss = 'categorical_crossentropy',
+#               optimizer = Adam(lr=0.001),
+#               metrics = ['accuracy'])
+#
+# nb_train_samples = 29045
+# nb_validation_samples = 3534
+# epochs = 10
+#
+# history = model.fit_generator(
+#     train_generator,
+#     steps_per_epoch = nb_train_samples // batch_size,
+#     epochs = epochs,
+#     callbacks = callbacks,
+#     validation_data = validation_generator,
+#     validation_steps = nb_validation_samples // batch_size)
+#
+# model.save('VGG16_save.model')
 
